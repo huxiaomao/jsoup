@@ -1220,7 +1220,9 @@ enum TokeniserState {
             } else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
                 t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;
                 t.transition(AfterDoctypeSystemKeyword);
-            } else {
+            } else if(r.matches('[')){
+                r.consumeTo(']');
+            }else{
                 t.error(this);
                 t.doctypePending.forceQuirks = true;
                 t.advanceTransition(BogusDoctype);

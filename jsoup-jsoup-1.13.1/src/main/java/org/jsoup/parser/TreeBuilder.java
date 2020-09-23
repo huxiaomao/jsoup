@@ -75,6 +75,7 @@ abstract class TreeBuilder {
 
     protected boolean processStartTag(String name) {
         final Token.StartTag start = this.start;
+        updateToken(start);
         if (currentToken == start) { // don't recycle an in-use token
             return process(new Token.StartTag().name(name));
         }
@@ -83,6 +84,7 @@ abstract class TreeBuilder {
 
     public boolean processStartTag(String name, Attributes attrs) {
         final Token.StartTag start = this.start;
+        updateToken(start);
         if (currentToken == start) { // don't recycle an in-use token
             return process(new Token.StartTag().nameAttr(name, attrs));
         }
@@ -92,6 +94,7 @@ abstract class TreeBuilder {
     }
 
     protected boolean processEndTag(String name) {
+        updateToken(end);
         if (currentToken == end) { // don't recycle an in-use token
             return process(new Token.EndTag().name(name));
         }
@@ -103,6 +106,13 @@ abstract class TreeBuilder {
         int size = stack.size();
         return size > 0 ? stack.get(size-1) : null;
     }
+
+	protected void updateToken(Token token) {
+		token.charStartPos = currentToken.charStartPos;
+		token.charEndPos = currentToken.charEndPos;
+		token.byteStartPos = currentToken.byteStartPos;
+		token.byteEndPos = currentToken.byteEndPos;
+	}
 
 
     /**

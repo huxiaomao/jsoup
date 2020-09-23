@@ -87,7 +87,11 @@ public class TextNode extends LeafNode {
 
         final boolean normaliseWhite = prettyPrint && !Element.preserveWhitespace(parentNode);
         final boolean stripWhite = prettyPrint && parentNode instanceof Document;
-        Entities.escape(accum, coreValue(), out, false, normaliseWhite, stripWhite);
+        String value = coreValue();
+        if(Node.DEBUG_POS) {
+            value = "[" + byteStartPos + "," + tagEndPos + "]" + value;
+        }
+        Entities.escape(accum, value, out, false, normaliseWhite, stripWhite);
     }
 
 	void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {}

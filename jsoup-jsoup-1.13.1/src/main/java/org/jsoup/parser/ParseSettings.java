@@ -4,6 +4,8 @@ import org.jsoup.nodes.Attributes;
 
 import static org.jsoup.internal.Normalizer.lowerCase;
 
+import org.jsoup.internal.StringUtil;
+
 /**
  * Controls parser settings, to optionally preserve tag and/or attribute name case.
  */
@@ -24,6 +26,9 @@ public class ParseSettings {
 
     private final boolean preserveTagCase;
     private final boolean preserveAttributeCase;
+    private String searchText;
+    private int contextLength;
+    private boolean isSearch = false;
 
     /**
      * Returns true if preserving tag name case.
@@ -75,4 +80,25 @@ public class ParseSettings {
         }
         return attributes;
     }
+
+	public String getSearchText() {
+		return searchText;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+		isSearch = !StringUtil.isBlank(this.searchText);
+	}
+
+	public boolean isSearchText() {
+		return isSearch;
+	}
+
+	public void setContextLength(int contextLength) {
+		this.contextLength = contextLength;
+	}
+
+	public int getContextLength() {
+		return contextLength;
+	}
 }

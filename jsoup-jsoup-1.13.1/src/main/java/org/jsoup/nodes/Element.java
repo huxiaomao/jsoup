@@ -140,7 +140,10 @@ public class Element extends Node {
      * @return the tag name
      */
     public String tagName() {
-        return tag.getName();
+		if (DEBUG_POS) {
+			return tag.getName() + "[" + byteStartPos + "," + tagEndPos + "]";
+		}
+		return tag.getName();
     }
 
     /**

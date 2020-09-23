@@ -214,6 +214,7 @@ enum HtmlTreeBuilderState {
                 if (name.equals("html")) {
                     return tb.process(t, InBody);
                 } else if (name.equals("body")) {
+                    tb.openSearch();
                     tb.insert(startTag);
                     tb.framesetOk(false);
                     tb.transition(InBody);
@@ -644,6 +645,9 @@ enum HtmlTreeBuilderState {
                     }
                     break;
                 case "body":
+                    if(tb.currentElement() != null) {
+                        tb.currentElement().setTagEndPos(t.byteEndPos());
+                    }
                     if (!tb.inScope("body")) {
                         tb.error(this);
                         return false;

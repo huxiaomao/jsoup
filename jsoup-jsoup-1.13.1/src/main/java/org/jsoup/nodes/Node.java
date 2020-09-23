@@ -20,6 +20,7 @@ import java.util.List;
 
  @author Jonathan Hedley, jonathan@hedley.net */
 public abstract class Node implements Cloneable {
+	public static boolean DEBUG_POS = false;
     static final String EmptyString = "";
     public static final String XPATH_SEPARATOR = "/";
     Node parentNode;
@@ -31,6 +32,7 @@ public abstract class Node implements Cloneable {
     int charEndPos;
     int byteStartPos;
     int byteEndPos;
+    int tagEndPos;
 
     /**
      * Default constructor. Doesn't setup base uri, children, or attributes; use with caution.
@@ -813,6 +815,16 @@ public abstract class Node implements Cloneable {
 
 	public void setByteEndPos(int byteEndPos) {
 		this.byteEndPos = byteEndPos;
+	}
+
+	public int getTagEndPos() {
+		return tagEndPos;
+	}
+
+	public void setTagEndPos(int tagEndPos) {
+		if (tagEndPos > this.tagEndPos) {
+			this.tagEndPos = tagEndPos;
+		}
 	}
 
 	public boolean validNode(Node child) {

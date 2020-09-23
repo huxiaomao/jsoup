@@ -1,6 +1,7 @@
 package org.jsoup.nodes;
 
 import org.jsoup.internal.StringUtil;
+import org.jsoup.helper.SearchHelper;
 import org.jsoup.helper.Validate;
 import org.jsoup.parser.ParseSettings;
 import org.jsoup.parser.Parser;
@@ -22,6 +23,7 @@ public class Document extends Element {
     private QuirksMode quirksMode = QuirksMode.noQuirks;
     private String location;
     private boolean updateMetaCharset = false;
+    private SearchHelper searchHelper;
 
     /**
      Create a new, empty Document.
@@ -614,4 +616,12 @@ public class Document extends Element {
         this.parser = parser;
         return this;
     }
+
+	public SearchHelper getSearchHelper() {
+		if (searchHelper == null) {
+			searchHelper = new SearchHelper(parser().settings().getSearchText());
+			searchHelper.setContextLength(parser().settings().getContextLength());
+		}
+		return searchHelper;
+	}
 }

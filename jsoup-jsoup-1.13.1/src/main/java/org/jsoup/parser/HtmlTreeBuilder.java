@@ -56,6 +56,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
     private boolean framesetOk; // if ok to go into frameset
     private boolean fosterInserts; // if next inserts should be fostered
     private boolean fragmentParsing; // if parsing a fragment of html
+    private boolean openSearch = false;
 
     ParseSettings defaultSettings() {
         return ParseSettings.htmlDefault;
@@ -134,7 +135,14 @@ public class HtmlTreeBuilder extends TreeBuilder {
     @Override
     protected boolean process(Token token) {
         currentToken = token;
+		updateTagPos();
         return this.state.process(token, this);
+    }
+
+    private void updateTagPos() {
+		if (this.currentElement() != null && !this.currentElement().nodeName().equals("body")) {
+			this.currentElement().setTagEndPos(currentToken.byteEndPos());
+		}
     }
 
     boolean process(Token token, HtmlTreeBuilderState state) {
@@ -742,6 +750,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		node.setCharEndPos(currentToken.charEndPos());
 		node.setByteStartPos(currentToken.byteStartPos());
 		node.setByteEndPos(currentToken.byteEndPos());
+		node.setTagEndPos(currentToken.byteEndPos());
+		searchText(node);
 		printPos(node);
 	}
 
@@ -756,6 +766,22 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			text += "," + ((TextNode) node).getWholeText();
 		}
 		System.out.println(text);
+	}
+
+	public void searchText(Node node) {
+		if (!openSearch) {
+			return;
+		}
+		if (node instanceof TextNode) {
+			doc.getSearchHelper().getDocContainingText((TextNode) node);
+		}
+	}
+
+	public void openSearch() {
+		if (settings.isSearchText()) {
+			openSearch = true;
+			doc.getSearchHelper();
+		}
 	}
 
     @Override

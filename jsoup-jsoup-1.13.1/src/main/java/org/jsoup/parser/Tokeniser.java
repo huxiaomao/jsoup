@@ -88,7 +88,8 @@ final class Tokeniser {
             if (endTag.attributes != null)
                 error("Attributes incorrectly present on end tag");
         }
-        setPos(emitPending);
+        setStartPos(emitPending);
+        setEndPos(emitPending);
     }
 
     void emit(final String str) {
@@ -96,6 +97,7 @@ final class Tokeniser {
         // does not set isEmitPending; read checks that
         if (charsString == null) {
             charsString = str;
+            setStartPos(charPending);
         }
         else {
             if (charsBuilder.length() == 0) { // switching to string builder as more than one emit before read
@@ -103,13 +105,16 @@ final class Tokeniser {
             }
             charsBuilder.append(str);
         }
-        setPos(charPending);
+        setEndPos(charPending);
     }
 
-	void setPos(Token t) {
+	void setStartPos(Token t) {
 		t.setCharStartPos(reader.charStartPos());
-		t.setCharEndPos(reader.charEndPos());
 		t.setByteStartPos(reader.byteStartPos());
+	}
+
+	void setEndPos(Token t) {
+		t.setCharEndPos(reader.charEndPos());
 		t.setByteEndPos(reader.byteEndPos());
 		reader.nextPos();
 	}
